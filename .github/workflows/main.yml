@@ -15,30 +15,17 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
 
-    - name: Run pytest and save results
+    - name: Run pytest
       run: |
-        pytest --junitxml=test_results.xml
+        pytest > test_results.txt
 
     - name: Display scores
       run: |
         echo "Scores for each function:"
-        python - <<EOF
-import xml.etree.ElementTree as ET
-
-tree = ET.parse('test_results.xml')
-root = tree.getroot()
-
-for testcase in root.iter('testcase'):
-    function_name = testcase.attrib['classname'] + '.' + testcase.attrib['name']
-    score = 'Pass' if not testcase.find('failure') else 'Fail'
-    print(f"{function_name}: {score}")
-EOF
+        cat test_results.txt
