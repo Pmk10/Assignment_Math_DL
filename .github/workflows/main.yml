@@ -21,8 +21,7 @@ jobs:
         pip install pytest
 
     - name: Run pytest
-      run: |
-        pytest > test_results.txt
+      run: pytest -v > test_results.txt
 
     - name: Display scores
       run: |
