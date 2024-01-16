@@ -31,4 +31,14 @@ jobs:
     - name: Display scores
       run: |
         echo "Scores for each function:"
-        cat test_results.xml
+        python - <<EOF
+import xml.etree.ElementTree as ET
+
+tree = ET.parse('test_results.xml')
+root = tree.getroot()
+
+for testcase in root.iter('testcase'):
+    function_name = testcase.attrib['classname'] + '.' + testcase.attrib['name']
+    score = 'Pass' if not testcase.find('failure') else 'Fail'
+    print(f"{function_name}: {score}")
+EOF
